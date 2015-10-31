@@ -13,3 +13,9 @@ is operating with an IATA or ICAO flight number and outputs results into differe
 ```
 $ git clone git@github.com:maciekkolodziej/flight_processor.git
 ```
+
+3. Install required gems:
+```
+$ cd flight_processor
+$ bundle install
+```
