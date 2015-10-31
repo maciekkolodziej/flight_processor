@@ -1,11 +1,47 @@
 $:.unshift Dir.pwd
 
-%w( app/models app/parsers ).each do |path|
+require 'logger'
+require 'app/parsers/parser'
+require 'csv'
+require 'virtus'
+
+%w( app/loggers app/models app/parsers ).each do |path|
   Dir["#{path}/*.rb"].each {|file| require file }
 end
-
+Module
 class App
+  attr_reader :options, :logger, :input_file_path, :output_file_path, :parser
+
   def initialize(options)
+    @options = options
+    @input_file_path = options.fetch('input_file')
+    @output_file_path = options.fetch('output_file')
+
     puts 'Welcome to flight processor.'
+
+    check_input_file!
+    process
   end
+
+  private
+
+  def check_input_file!
+    if File.exists? input_file_path
+      puts "[OK] Input file '#{ input_file_path }' has been found."
+    else
+      AppLogger.log :error, "Input file '#{ input_file_path }' doesn't exist."
+      exit
+    end
+  end
+
+  def process
+    @parser = Parser.new input_file_path, output_file_path
+    AppLogger.log :info, "Output file '#{ output_file_path }' successfully created."
+    @parser.parse
+
+  rescue Errno::ENOENT
+    AppLogger.log :error, "Output file '#{ output_file_path }' couldn't be created."
+    exit
+  end
+
 end
