@@ -5,12 +5,11 @@ require 'app/parsers/parser'
 require 'csv'
 require 'virtus'
 require 'active_model'
-require 'date_validator'
 
 %w( app/loggers app/models app/parsers ).each do |path|
   Dir["#{path}/*.rb"].each {|file| require file }
 end
-Module
+
 class App
   attr_reader :options, :logger, :input_file_path, :output_file_path, :parser
 
@@ -44,5 +43,4 @@ class App
     AppLogger.log :error, "Output file '#{ output_file_path }' couldn't be created."
     exit
   end
-
 end
