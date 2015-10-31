@@ -4,6 +4,8 @@ require 'logger'
 require 'app/parsers/parser'
 require 'csv'
 require 'virtus'
+require 'active_model'
+require 'date_validator'
 
 %w( app/loggers app/models app/parsers ).each do |path|
   Dir["#{path}/*.rb"].each {|file| require file }
@@ -36,7 +38,6 @@ class App
 
   def process
     @parser = Parser.new input_file_path, output_file_path
-    AppLogger.log :info, "Output file '#{ output_file_path }' successfully created."
     @parser.parse
 
   rescue Errno::ENOENT
