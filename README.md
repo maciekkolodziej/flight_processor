@@ -30,6 +30,11 @@ More options
 $ thor fp help start
 ```
 
+Run tests
+```
+$ bundle exec rspec
+```
+
 ## Options
 Change input file path
 ```
