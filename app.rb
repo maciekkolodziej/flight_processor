@@ -11,14 +11,15 @@ require 'active_model'
 end
 
 class App
-  attr_reader :options, :logger, :input_file_path, :output_file_path, :parser
+  attr_reader :options, :input_file_path, :output_file_path, :parser
 
   def initialize(options)
     @options = options
     @input_file_path = options.fetch('input_file')
     @output_file_path = options.fetch('output_file')
+    $quiet = options.fetch('quiet')
 
-    puts 'Welcome to flight processor.'
+    puts 'Welcome to flight processor.' unless $quiet
 
     check_input_file!
     process
@@ -28,7 +29,7 @@ class App
 
   def check_input_file!
     if File.exists? input_file_path
-      puts "[OK] Input file '#{ input_file_path }' has been found."
+      AppLogger.log :info, "Input file '#{ input_file_path }' has been found."
     else
       AppLogger.log :error, "Input file '#{ input_file_path }' doesn't exist."
       exit

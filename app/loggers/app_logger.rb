@@ -9,6 +9,6 @@ class AppLogger
                else             ''
              end
     output += message
-    puts output
+    puts output unless $quiet
   end
 end

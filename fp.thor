@@ -9,6 +9,10 @@ class Fp < Thor
                 default: 'data/sample_output.csv',
                 desc: 'Path to output file.'
 
+  method_option :quiet, aliases: '-q',
+                default: false,
+                desc: 'Quiet mode.'
+
   def start
     $:.unshift Dir.pwd
     require 'app'
