@@ -1,4 +1,4 @@
 .idea/*
 log/*
 spec/tmp/*
-errors.csv
+/errors.csv
