@@ -1,18 +1,19 @@
 class Parser
-  attr_reader :input_file_path, :output_file_path, :output_file, :new_entries, :valid_entries, :invalid_entries,
-              :headers
+  attr_reader :input_file_path, :output_file_path, :new_entries, :valid_entries, :invalid_entries,
+              :input_headers, :output_headers
 
   def initialize(input_file_path, output_file_path)
     @input_file_path = input_file_path
     @output_file_path = output_file_path
-    @headers = %i(id carrier_code flight_number flight_date)
+    @input_headers = %i(id carrier_code flight_number flight_date)
+    @output_headers = %i(id carrier_code_type carrier_code flight_number flight_date)
     self
   end
 
   def parse
     @new_entries = []
     CSV.read(input_file_path, headers: true).each do |row|
-      attributes = Hash[headers.each_with_index.map{ |key, i| [key, row[i]]}]
+      attributes = Hash[input_headers.each_with_index.map{ |key, i| [key, row[i]]}]
       @new_entries << Flight.new(attributes)
     end
     process_entries
@@ -49,13 +50,13 @@ class Parser
   end
 
   def save_valid_entries
-    CSV.open(output_file_path, 'w', write_headers: true, headers: headers) do |csv|
+    CSV.open(output_file_path, 'w', write_headers: true, headers: output_headers) do |csv|
       valid_entries.each{ |entry| csv << entry.to_a }
     end
   end
 
   def save_invalid_entries
-    errors_headers = headers << :errors
+    errors_headers = output_headers << :errors
     CSV.open('errors.csv', 'w', write_headers: true, headers: errors_headers) do |csv|
       invalid_entries.each{ |entry| csv << entry.to_invalid_a }
     end
