@@ -1,5 +1,4 @@
 .idea/*
-data/*
 log/*
 spec/tmp/*
 errors.csv
